@@ -64,6 +64,7 @@ void displayInfo()
     Serial.print(gps.date.day());
     Serial.print("/");
     Serial.println(gps.date.year());
+    Serial.println("hi");
   }
   else
   {
