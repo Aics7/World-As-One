@@ -1,4 +1,4 @@
-package com.example.waomobile;
+package com.example.wao;
 
 import org.junit.Test;
 

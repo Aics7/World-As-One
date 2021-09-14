@@ -1,4 +1,4 @@
-package com.example.waomobile;
+package com.example.wao;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.waomobile", appContext.getPackageName());
+        assertEquals("com.example.wao", appContext.getPackageName());
     }
 }
