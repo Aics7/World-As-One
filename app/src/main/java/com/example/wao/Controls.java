@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -32,7 +33,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class Controls extends AppCompatActivity {
-
+    String incomingMessage;
     Button startBtn, stopBtn, disconnectBtn;
     String address = null;
     TextView data;
@@ -42,6 +43,8 @@ public class Controls extends AppCompatActivity {
     BluetoothSocket btSocket = null;
     private boolean isBtConnected = false;
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    ReceiveData receiver = new ReceiveData();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +64,9 @@ public class Controls extends AppCompatActivity {
         stopBtn =  findViewById(R.id.stop);
         disconnectBtn =  findViewById(R.id.disconnect);
         data =  findViewById(R.id.textView);
-
         data.setText("GPS data will be displayed here!");
+
+
 
 
         new Controls.ConnectBT().execute();
@@ -101,6 +105,7 @@ public class Controls extends AppCompatActivity {
             }
         }
     }
+
 
     private void Disconnect () {
         if ( btSocket!=null ) {
@@ -153,9 +158,48 @@ public class Controls extends AppCompatActivity {
             } else {
                 msg("Connected");
                 isBtConnected = true;
+
+                Log.d("DEBUG PRINTS","Before thread instance");
+
+                receiver.start();
             }
 
             progress.dismiss();
         }
     }
+
+
+
+    //Starts a thread to receive data from bluetooth
+    private class ReceiveData extends Thread {
+
+        @Override
+        public void run() {
+            byte[] buffer = new byte[1024];  // buffer store for the stream
+            int bytes; // bytes returned from read()
+            if (btSocket != null) {
+                while (true) {
+                    // Read from the InputStream
+                    try {
+                        bytes = btSocket.getInputStream().read(buffer);
+                        incomingMessage = new String(buffer, 0, bytes);
+                        if(incomingMessage.length()>2) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    data.setText(incomingMessage);
+                                }
+                            });
+                        }
+
+                        Log.d("DEBUG PRINTS", "message = " + incomingMessage + "len = " + incomingMessage.length());
+                    } catch (IOException e) {
+                        //break;
+                    }
+                }
+            }
+        }
+    }
+
+
 }
