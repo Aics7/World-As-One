@@ -64,7 +64,7 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="100dp"
+                android:minHeight="250dp"
                 android:footerDividersEnabled="false"
                 android:textAlignment="center"
                 android:text="Place holder for received data"
